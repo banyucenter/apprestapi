@@ -1,7 +1,7 @@
 {
   "name": "apprestapi",
   "version": "1.0.0",
-  "description": "aplikasi rest api",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,21 +10,10 @@
     "type": "git",
     "url": "git+https://github.com/banyucenter/apprestapi.git"
   },
-  "keywords": [
-    "rest",
-    "api",
-    "nodejs"
-  ],
-  "author": "ipung",
+  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/banyucenter/apprestapi/issues"
   },
-  "homepage": "https://github.com/banyucenter/apprestapi#readme",
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
-    "mysql": "^2.18.1",
-    "npm-reinstall": "^3.1.0"
-  }
+  "homepage": "https://github.com/banyucenter/apprestapi#readme"
 }
