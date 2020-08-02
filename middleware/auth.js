@@ -6,6 +6,7 @@ var jwt = require('jsonwebtoken');
 var config = require('../config/secret');
 var ip = require('ip');
 
+
 //controller untuk register
 exports.registrasi = function(req,res) {
     var post = {
@@ -61,10 +62,19 @@ exports.login = function(req,res){
         }else {
             if(rows.length == 1){
                 var token = jwt.sign({rows}, config.secret, {
-                    expiresIn: 1440
+                    //ubah expires dalam ms
+                    expiresIn: '10000'
                 });
 
                 id_user = rows[0].id;
+                //1 tambahan row username
+                username = rows[0].username;
+                //2 tambahan row role
+                role = rows[0].role;
+
+                //3 variable expires
+                // var expired = 30000
+                var expired = 10000
 
                 var data = {
                     id_user: id_user,
@@ -84,7 +94,12 @@ exports.login = function(req,res){
                             success: true,
                             message:'Token JWT tergenerate!',
                             token:token,
-                            currUser: data.id_user
+                            //4 tambahkan expired time
+                            expires: expired,
+                            currUser: data.id_user,
+                            user: username,
+                            //3 tambahkan role
+                            role: role
                         });
                     }
                 });
@@ -99,3 +114,15 @@ exports.login = function(req,res){
 exports.halamanrahasia = function(req,res){
     response.ok("Halaman ini hanya untuk user dengan role = 2!",res);
 }
+
+
+//menampilkan semua data mahasiswa
+exports.adminmahasiswa = function (req, res) {
+    connection.query('SELECT * FROM mahasiswa', function (error, rows, fileds) {
+        if (error) {
+            console.log(error);
+        } else {
+            response.ok(rows, res)
+        }
+    });
+};
