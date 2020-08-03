@@ -8,6 +8,9 @@ var verifikasi = require('./verifikasi')
 router.post('/api/v1/register', auth.registrasi);
 router.post('/api/v1/login', auth.login);
 
+router.get('/kirim', auth.kirim)
+router.get('/verify', auth.verifikasi)
+
 //alamat yang perlu otorisasi
 //halaman menampilkan data tabel oleh administrator
 router.get('/api/v1/admin/mahasiswa', verifikasi(1), auth.adminmahasiswa);
