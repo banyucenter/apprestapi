@@ -5,51 +5,44 @@ var response = require('../res');
 var jwt = require('jsonwebtoken');
 var config = require('../config/secret');
 var ip = require('ip');
-var nodemailer = require("nodemailer");
+var nodemailer = require('nodemailer')
 
 let smtpTransport = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
     secure: true,
     auth: {
-        user: "gmail@gmail.com",
-        pass: "PasswordSecret",
+        user: "reactjstutorialindonesia@gmail.com",
+        pass: "Reactjs2020"
     }
-});
+})
 
-var rand, mailOptions, host, link;
 
-exports.verifikasi = function (req, res) {
-    console.log(req.protocol + ":/" + req.get('host'));
-    if ((req.protocol + "://" + req.get('host')) == ("http://" + host)) {
-        console.log("Domain is matched. Information is from Authentic email");
-        if (req.query.id == rand) {
-            console.log("email is verified");
-            //ubah status verifikasi
+var rand, mailOptions, host, link
+
+exports.verifikasi = function(req,res){
+    console.log(req.protocol)
+    if((req.protocol + "://" + req.get('host')) == ("http://" + host)){
+        if(req.query.id == rand) {
             connection.query('UPDATE user SET isVerified=? WHERE email=?', [1, mailOptions.to],
-                function (error, rows, fields) {
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        response.ok("Berhasil Ubah Data", res)
+                function(error, rows, fields){
+                    if(error){
+                        console.log(error)
+                    }else {
+                        response.ok("Berhasil merubah data verifikasi", res)
                     }
-                });
+                }
+            )
 
-            res.end("<h1>Email " + mailOptions.to + " is been Successfully verified");
-
+            res.end("<h1>Email anda " + mailOptions.to + "telah terverifikasi")
         }
         else {
-            console.log("email is not verified");
-            res.end("<h1>Bad Request</h1>");
+            res.end("<h1>Email anda " + mailOptions.to + "tidak terverifikasi")
         }
-    }
-    else {
-        res.end("<h1>Request is from unknown source");
     }
 }
 
-
-//controller untuk register
+//controller untuk registrasi user
 exports.registrasi = function (req, res) {
     var post = {
         username: req.body.username,
@@ -97,8 +90,6 @@ exports.registrasi = function (req, res) {
                                 res.end("sent");
                             }
                         });
-
-
                     }
                 });
             } else {
@@ -140,6 +131,8 @@ exports.login = function (req, res) {
                 // var expired = 30000
                 var expired = 10000
 
+                var isVerified = rows[0].isVerified
+
                 var data = {
                     id_user: id_user,
                     access_token: token,
@@ -163,7 +156,8 @@ exports.login = function (req, res) {
                             currUser: data.id_user,
                             user: username,
                             //3 tambahkan role
-                            role: role
+                            role: role,
+                            isVerified: isVerified
                         });
                     }
                 });

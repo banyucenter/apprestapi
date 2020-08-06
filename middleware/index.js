@@ -8,7 +8,6 @@ var verifikasi = require('./verifikasi')
 router.post('/api/v1/register', auth.registrasi);
 router.post('/api/v1/login', auth.login);
 
-router.get('/kirim', auth.kirim)
 router.get('/verify', auth.verifikasi)
 
 //alamat yang perlu otorisasi
