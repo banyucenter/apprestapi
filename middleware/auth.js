@@ -28,13 +28,12 @@ exports.verifikasi = function(req,res){
                 function(error, rows, fields){
                     if(error){
                         console.log(error)
+                        res.end(error)
                     }else {
-                        response.ok("Berhasil merubah data verifikasi", res)
+                        res.end("<h1>Email anda " + mailOptions.to + "telah terverifikasi")
                     }
                 }
-            )
-
-            res.end("<h1>Email anda " + mailOptions.to + "telah terverifikasi")
+            ) 
         }
         else {
             res.end("<h1>Email anda " + mailOptions.to + "tidak terverifikasi")
@@ -48,7 +47,7 @@ exports.registrasi = function (req, res) {
         username: req.body.username,
         email: req.body.email,
         password: md5(req.body.password),
-        role: req.body.role,
+        role: 3,
         tanggal_daftar: new Date(),
         isVerified: 0
     }
@@ -70,30 +69,40 @@ exports.registrasi = function (req, res) {
                     if (error) {
                         console.log(error);
                     } else {
+                        //kirimkan email verifikasi
                         rand = Math.floor((Math.random() * 100) + 54)
                         host = "localhost:3001"
-                        link = "http://" + host + "/auth/verify?id=" + rand;
+                        link = "http://" + host + "/auth/verify?id=" + rand
                         mailOptions = {
                             to: post.email,
-                            subject: "Please confirm your Email account",
-                            html: "Hello,<br> Please Click on the link to verify your email.<br><a href=" + link + ">Click here to verify</a>"
+                            subject : "Verifikasi Email",
+                            html: "Hallo, <br> Please klik tautan verifikasi berikut <br>"+
+                            "<a href=" + link + ">Click here to verifikasi</a>"
                         }
-                        console.log(mailOptions);
 
-                        smtpTransport.sendMail(mailOptions, function (error, response) {
-                            if (error) {
-                                console.log(error);
-                                res.end("error");
-                            } else {
-                                console.log("Message sent: " + response.message);
-                                response.ok("Berhasil menambahkan data user baru", res);
-                                res.end("sent");
+                        smtpTransport.sendMail(mailOptions, function(error, response){
+                            if(error){
+                                 res.json({
+                                     success: false,
+                                     isRegistered: false,
+                                     message: "Email verfikasi gagal terkirim"
+                                 }).end();
+                            }else {
+                                res.json({
+                                    success: true,
+                                    isRegistered: false,
+                                    message: "Email verfikasi berhasil terkirim"
+                                }).end();
                             }
-                        });
+                        })
                     }
                 });
             } else {
-                response.ok("Email sudah terdaftar!", res);
+                res.json({
+                    success: false,
+                    isRegistered: true,
+                    message: "Email anda telah terdaftar!"
+                }).end();
             }
         }
     })
@@ -130,7 +139,6 @@ exports.login = function (req, res) {
                 //3 variable expires
                 // var expired = 30000
                 var expired = 10000
-
                 var isVerified = rows[0].isVerified
 
                 var data = {

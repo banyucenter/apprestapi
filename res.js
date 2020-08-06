@@ -7,7 +7,6 @@ exports.ok = function(values, res){
     };
 
     console.log(values)
-
      res.json(data);
      res.end();
 };
