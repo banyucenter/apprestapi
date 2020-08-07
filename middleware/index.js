@@ -7,6 +7,7 @@ var verifikasi = require('./verifikasi')
 //daftarkan menu registrasi
 router.post('/api/v1/register', auth.registrasi);
 router.post('/api/v1/login', auth.login);
+router.post('/api/v1/ubahpassword', verifikasi(1), auth.ubahPassword);
 
 router.get('/verify', auth.verifikasi)
 
